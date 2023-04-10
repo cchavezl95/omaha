@@ -5,6 +5,60 @@ import UIButton from '../../components/UIButton';
 
 const Perfil = () => {
 
+    const [validaGenero, setValidaGenero] = useState({
+        male: true,
+        fem: false,
+    });
+
+    const onChangeCurriculumSelect = (e, name) => {
+        setCurriculum({ ...curriculum, [name]: e.value });
+    };
+
+    const [curriculum, setCurriculum] = useState({
+        idDatosPersonales: 0,
+        idUsuario: 0,
+        IdPlantillaAplicada: 1,
+        dicCiudadResidencia: 0,
+        dicDepartamento: 0,
+        dicTipoDocumento: 0,
+        dicProfesion: 0,
+        dicAreaTrabajo: 0,
+        dicAspiracionSalarial: 0,
+        nombres: 'Cristoher',
+        apellidoPaterno: 'Lazaro',
+        apellidoMaterno: '',
+        rutaFoto: '',
+        identificacion: '12345678',
+        correoElectronico: 'prueba@gmail.com',
+        telefonoCelular: '987654321',
+        direccionResidencia: 'Jr mar del plata 856',
+        anosExperiencia: '',
+        paisesTrabajar: '',
+        redesSociales: '',
+        descripcionPerfilProfesional: '',
+        genero: '',
+        movilidadLaboral: '',
+        idiomaNivel: '',
+        habilidades: '',
+        fechaNacimiento: '',
+        vigente: true,
+        tipoTextoHV: '',
+        colorHV: '',
+    });
+
+    const onChangeCurriculum = (e) => {
+        setCurriculum({ ...curriculum, [e.target.name]: e.target.value });
+        if (e.target.name === 'genero') {
+            if (e.target.value === 'M') {
+                validaGenero.male = true;
+                validaGenero.fem = false;
+            } else {
+                validaGenero.male = false;
+                validaGenero.fem = true;
+            }
+        }
+    };
+
     const [imgPerfil, setImgPerfil] = useState('/assets/img/img_profile.svg');
     const [sinPerfil, setSinPerfil] = useState(true);
     const tipoDocumento = [
@@ -129,10 +183,10 @@ const Perfil = () => {
                             placeholder="Nombres"
                             className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
                             name="nombres"
-                            // value={curriculum.nombres}
-                            // onChange={(e) => {
-                            //     onChangeCurriculum(e);
-                            // }}
+                            value={curriculum.nombres}
+                            onChange={(e) => {
+                                onChangeCurriculum(e);
+                            }}
                         />
                 </div>
                 <div className="">
@@ -142,10 +196,10 @@ const Perfil = () => {
                             placeholder="Apellido Paterno"
                             name="apellidoPaterno"
                             className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                            // value={curriculum.apellidoPaterno}
-                            // onChange={(e) => {
-                            //     onChangeCurriculum(e);
-                            // }}
+                            value={curriculum.apellidoPaterno}
+                            onChange={(e) => {
+                                onChangeCurriculum(e);
+                            }}
                         />
                 </div>
                 <div className="flex items-center">
@@ -156,13 +210,13 @@ const Perfil = () => {
                                 borderRadius: '5px 0px 0px 5px',
                             }}
                             options={tipoDocumento}
-                            // onChange={(e) => {
-                            //     onChangeCurriculumSelect(e, 'dicTipoDocumento');
-                            // }}
+                            onChange={(e) => {
+                                onChangeCurriculumSelect(e, 'dicTipoDocumento');
+                            }}
                             placeholder="Seleccionar"
-                            // value={tipoDocumento.find(
-                            //     (x) => x.value === curriculum.dicTipoDocumento
-                            // )}
+                            value={tipoDocumento.find(
+                                (x) => x.value === curriculum.dicTipoDocumento
+                            )}
                         />
 
                         <div
@@ -192,10 +246,10 @@ const Perfil = () => {
                         placeholder="Correo electrónico"
                         name="correoElectronico"
                         className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                        // value={curriculum.correoElectronico}
-                        // onChange={(e) => {
-                        //     onChangeCurriculum(e);
-                        // }}
+                        value={curriculum.correoElectronico}
+                        onChange={(e) => {
+                            onChangeCurriculum(e);
+                        }}
                     />
 
                     {/* <p>Teléfono Celular</p> */}
@@ -204,10 +258,10 @@ const Perfil = () => {
                         placeholder="Teléfono Celular"
                         name="telefonoCelular"
                         className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                        // value={curriculum.telefonoCelular}
-                        // onChange={(e) => {
-                        //     onChangeCurriculum(e);
-                        // }}
+                        value={curriculum.telefonoCelular}
+                        onChange={(e) => {
+                            onChangeCurriculum(e);
+                        }}
                     />
 
                     {/* <p>Fecha de nacimiento</p> */}
@@ -216,10 +270,10 @@ const Perfil = () => {
                         placeholder="Fecha de nacimiento"
                         name="fechaNacimiento"
                         className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                        // value={curriculum.fechaNacimiento}
-                        // onChange={(e) => {
-                        //     onChangeCurriculum(e);
-                        // }}
+                        value={curriculum.fechaNacimiento}
+                        onChange={(e) => {
+                            onChangeCurriculum(e);
+                        }}
                     />
 
                     <div className="comparasalario__group">
@@ -235,10 +289,10 @@ const Perfil = () => {
                                 id="r-male"
                                 name="genero"
                                 value="M"
-                                // onChange={(e) => {
-                                //     onChangeCurriculum(e);
-                                // }}
-                                // checked={validaGenero.male}
+                                onChange={(e) => {
+                                    onChangeCurriculum(e);
+                                }}
+                                checked={validaGenero.male}
                             />
                             <label>&nbsp;&nbsp;Masculino</label>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -248,10 +302,10 @@ const Perfil = () => {
                                 id="r-fem"
                                 name="genero"
                                 value="F"
-                                // onChange={(e) => {
-                                //     onChangeCurriculum(e);
-                                // }}
-                                // checked={validaGenero.fem}
+                                onChange={(e) => {
+                                    onChangeCurriculum(e);
+                                }}
+                                checked={validaGenero.fem}
                             />
                             <span>&nbsp;&nbsp;Femenino</span>
                         </div>
@@ -264,10 +318,10 @@ const Perfil = () => {
                             placeholder="Dirección de domicilio"
                             name="direccionResidencia"
                             className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                            // value={curriculum.direccionResidencia}
-                            // onChange={(e) => {
-                            //     onChangeCurriculum(e);
-                            // }}
+                            value={curriculum.direccionResidencia}
+                            onChange={(e) => {
+                                onChangeCurriculum(e);
+                            }}
                         />
                     </div>
 

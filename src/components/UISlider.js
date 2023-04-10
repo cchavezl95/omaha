@@ -51,7 +51,7 @@ const UISlider = ({component,setIdVista}) => {
         </ul>
         </div>      
     </aside>
-    <div className="p-4 sm:ml-64">
+    <div className="sm:ml-64">
         {component}
     </div>
     </>
