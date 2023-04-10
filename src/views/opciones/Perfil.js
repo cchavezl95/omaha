@@ -91,7 +91,7 @@ const Perfil = () => {
     <>
         <div className='p-6' >
             <div className='text-slider font-bold text-[24px] font-principal'>
-                Información Básica
+                    Información Básica
             </div>
             <div className="p-4 mt-[30px] md:p-10 rounded-lg"
                 style={{ boxShadow: ' 0px 0px 30px rgba(0, 135, 174, 0.2)' }} >

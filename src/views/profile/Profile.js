@@ -3,6 +3,7 @@ import UISlider from '../../components/UISlider'
 import Perfil from '../opciones/Perfil';
 import EstadosCuenta from '../opciones/EstadosCuenta';
 import Reportes from '../opciones/Reportes';
+import Comunicado from '../opciones/Comunicado';
 
 const Profile = () => {
 
@@ -16,6 +17,9 @@ const Profile = () => {
         break;
         case 2 : 
         component=<EstadosCuenta />;
+        break;
+        case 3 : 
+        component=<Comunicado />;
         break;
         case 4 : 
         component=<Reportes />;
