@@ -4,6 +4,7 @@ import '../opciones/perfil.css'
 import UIButton from '../../components/UIButton';
 import AuthContext from '../../context/authContext';
 import { getDataUser } from '../../hooks/utilities';
+import UIHeaderSub from '../../components/UIHeaderSub';
 
 const Perfil = () => {
 
@@ -85,14 +86,7 @@ const Perfil = () => {
   return (
     <>
         <div className='p-6' >
-            <div className='flex items-center justify-between'>
-                <div className='text-slider font-bold text-[24px] font-principal'>
-                        Información Básica
-                </div>
-                <div className='flex items-center'>
-                    <UIButton onClick={cerrar}>Cerrar Sesión</UIButton>
-                </div>
-            </div>
+            <UIHeaderSub title="Información Básica" ></UIHeaderSub>
             <div className="p-4 mt-[30px] md:p-10 rounded-lg"
                 style={{ boxShadow: ' 0px 0px 30px rgba(0, 135, 174, 0.2)' }} >
 

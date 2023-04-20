@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
 import { getDataUser } from '../../hooks/utilities'
+import UIHeaderSub from '../../components/UIHeaderSub';
 
 const EstadosCuenta = () => {
 
@@ -18,6 +19,7 @@ const EstadosCuenta = () => {
         let url = `/assets/${doc}_${temp}.pdf`
         if(url == "/assets/07271049_202303.pdf"
         || url == "/assets/42554388_202301.pdf"
+        || url == "/assets/42554388_202302.pdf" 
         || url == "/assets/42554388_202303.pdf"){
             setPdf(url)
             setVerReporte(true)
@@ -31,9 +33,7 @@ const EstadosCuenta = () => {
   return (
     <>
         <div className='p-6' >
-            <div className='text-slider font-bold text-[24px] font-principal'>
-                Estado de cuenta
-            </div>
+            <UIHeaderSub title="Estado de cuenta" ></UIHeaderSub>
             <div className="p-4 mt-[30px] md:p-10 rounded-lg">
                 <div className="md:w-[80%] grid md:grid-cols-2 grid-cols-1 gap-[2rem] mx-auto" >
                     {/* <div>

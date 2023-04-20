@@ -1,5 +1,6 @@
 import React from 'react'
 import UIButton from '../../components/UIButton'
+import UIHeaderSub from '../../components/UIHeaderSub';
 
 const CircleGraphic = ({ strokeDashoffset, name,color }) => {
     return (
@@ -53,9 +54,7 @@ const Reportes = () => {
   return (
     <>
     <div className='p-6' >
-        <div className='text-slider font-bold text-[24px] font-principal'>
-            Reportes
-        </div>
+        <UIHeaderSub title="Reportes" />
         <div className="mt-[30px] rounded-lg">
             <div className='flex items-center justify-between'>
                 <div className='flex items-center justify-start w-[85%]'>
