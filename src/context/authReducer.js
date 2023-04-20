@@ -3,7 +3,7 @@ const AuthReducer = (state, payload) => {
         case "INICIAR_SESION":
             return {
                 ...state,
-                globalDataUser: payload.data.globalDataUser,
+                globalDataUser: payload.data,
                 globalAutenticado: true,
             }
         case "CERRAR_SESION":

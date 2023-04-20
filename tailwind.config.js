@@ -111,6 +111,7 @@ module.exports = {
         2: '2',
     },
   },
-  plugins: [],
+  plugins: [
+  ],
 }
 

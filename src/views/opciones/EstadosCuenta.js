@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
+import { getDataUser } from '../../hooks/utilities'
 
 const EstadosCuenta = () => {
 
@@ -7,8 +8,25 @@ const EstadosCuenta = () => {
         {value:'DNI',label:'Tipo1'},
         {value:'CE',label:'Tip2'},
     ]
-
+    const [pdf,setPdf]= useState('');
     const [verRerporte,setVerReporte] = useState(false)
+    const [msg,setMsg] = useState('')
+    const mostrarReporte = (e) =>{
+        let doc = getDataUser().globalDocIdentidad
+        let tempAux = e.target.value
+        let temp = tempAux.replace('-','')
+        let url = `/assets/${doc}_${temp}.pdf`
+        if(url == "/assets/07271049_202303.pdf"
+        || url == "/assets/42554388_202301.pdf"
+        || url == "/assets/42554388_202303.pdf"){
+            setPdf(url)
+            setVerReporte(true)
+            
+        }else{
+            setMsg('Sin Resultados')
+            setVerReporte(true)
+        }
+    }
 
   return (
     <>
@@ -18,7 +36,7 @@ const EstadosCuenta = () => {
             </div>
             <div className="p-4 mt-[30px] md:p-10 rounded-lg">
                 <div className="md:w-[80%] grid md:grid-cols-2 grid-cols-1 gap-[2rem] mx-auto" >
-                    <div>
+                    {/* <div>
                     <p className='mb-[5px] font-bold text-[16px] font-principal'>Tipo de fondo</p>
                     <Select
                             className="flex h-full"
@@ -39,7 +57,7 @@ const EstadosCuenta = () => {
                             //     (x) => x.value === curriculum.dicTipoDocumento
                             // )}
                         />
-                    </div>
+                    </div> */}
                     <div>
                     <p className='mb-[5px] font-bold text-[16px] font-principal'>Mes</p>
                         <input
@@ -50,19 +68,28 @@ const EstadosCuenta = () => {
                             // value={curriculum.fechaNacimiento}
                             onChange={(e) => {
                                 // onChangeCurriculum(e);
-                                setVerReporte(true)
+                                //setVerReporte(true)
+                                mostrarReporte(e)
                             }}
                         />
                     </div>
                 </div>
                 <div className='md:w-[80%] mx-auto mt-[60px]'>
                      {verRerporte && (
-                        <embed
-                        src="/assets/prueba.pdf"
-                        type="application/pdf"
-                        width="100%"
-                        height="900px">
-                        </embed>
+                        <>
+                        {
+                            msg==='' ?
+                            <embed
+                            src={pdf}
+                            type="application/pdf"
+                            width="100%"
+                            height="900px">
+                            </embed> :
+                        <div className='w-full text-[20px] text-center'>
+                            {msg}
+                        </div>
+                        }
+                        </>
                      )}       
                 </div>
             </div>

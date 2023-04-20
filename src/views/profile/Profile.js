@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import UISlider from '../../components/UISlider'
 import Perfil from '../opciones/Perfil';
 import EstadosCuenta from '../opciones/EstadosCuenta';

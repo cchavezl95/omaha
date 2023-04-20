@@ -10,6 +10,7 @@ const Login = () => {
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(false);
+    const [Merror, setMerror] = useState(false);
     let navigate = useNavigate();
     const handleChange = (e) => {
         setUser(e);
@@ -20,25 +21,34 @@ const Login = () => {
     };
 
     const onSubmit = () =>{
-        let data = {
-          globalUsuId: "1",
-          globalUsuName: "Cristhian",
-          globalUsuSurname: "Chavez",
-          globalUsuCellphone: "959158672",
-          globalUsuEmail: "cchavezl1995@gmail.com",
-          globalUsuRole: "",
-          globalBirthDate : "1995-03-09",
-          globalAddress : "JR MAR DEL PLATA 172 COVIMA",
-          globalGen : "M",
-          globalUsuTipoDoc: "DNI",
-          globalDocIdentidad: "72896730",
+
+        if(user == "42554388" || user== "07271049" ){
+            if(password.length == 0 ){
+                setMerror('Debe ingresar una contraseña')
+            }else{
+                let data = {
+                    globalUsuId: "1",
+                    globalUsuName: "JUAN CARLOS",
+                    globalUsuSurname: "PEREZ LOPEZ",
+                    globalUsuCellphone: "999999999",
+                    globalUsuEmail: "stnperu@gmail.com",
+                    globalUsuRole: "2",
+                    globalBirthDate : "1995-03-09",
+                    globalAddress : "JR MAR DE LA PLATA 172 SJ",
+                    globalGen : "M",
+                    globalUsuTipoDoc: "DNI",
+                    globalDocIdentidad: user,
+                  }
+                  localStorage.setItem(
+                      'user',
+                      JSON.stringify(data)
+                  );
+                  globalIniciarSesion(data)
+                  navigate('/auth')
+            }
+        }else{
+            setMerror('Usuario no registrado')
         }
-        localStorage.setItem(
-            'user',
-            JSON.stringify(data)
-        );
-        globalIniciarSesion(data)
-        navigate("/auth")
     }
 
   return (
@@ -50,8 +60,8 @@ const Login = () => {
                 <div className="text-[64px] font-principal text-principal font-black">
                     omaha
                 </div>
-                <form
-                    onSubmit={onSubmit}
+                <div
+                    // onSubmit={onSubmit}
                     className="flex flex-col items-center justify-center w-full gap-3">
                     <UIInput
                         label="Usuario"
@@ -67,7 +77,10 @@ const Login = () => {
                         value={password}
                     />
                     <UIButton onClick={onSubmit} >Ingresar</UIButton>
-                </form>
+                </div>
+                <div className='text-[18px] text-red-500 text-center ' >
+                    {Merror}
+                </div>
             </div> 
     </div>
     </div>

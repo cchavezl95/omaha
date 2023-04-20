@@ -4,6 +4,9 @@ const Comunicado = () => {
   return (
    <>
      <div className='p-6' >
+      <div>
+        
+      </div>
         <div className='text-slider font-bold text-[24px] font-principal'>
                     Comunicado
         </div>

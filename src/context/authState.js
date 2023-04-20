@@ -55,6 +55,8 @@ const AuthState = (props) => {
           } else {
             navigate("/auth");
           }
+        }else{
+          navigate("/inicio")
         }
       }
 

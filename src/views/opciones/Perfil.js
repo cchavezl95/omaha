@@ -1,9 +1,13 @@
-import React,{ useState } from 'react'
+import React,{ useContext, useEffect, useState } from 'react'
 import Select from 'react-select';
 import '../opciones/perfil.css'
 import UIButton from '../../components/UIButton';
+import AuthContext from '../../context/authContext';
+import { getDataUser } from '../../hooks/utilities';
 
 const Perfil = () => {
+
+    const {globalDataUser,globalCerrarSesion} = useContext(AuthContext);
 
     const [validaGenero, setValidaGenero] = useState({
         male: true,
@@ -15,36 +19,18 @@ const Perfil = () => {
     };
 
     const [curriculum, setCurriculum] = useState({
-        idDatosPersonales: 0,
-        idUsuario: 0,
-        IdPlantillaAplicada: 1,
-        dicCiudadResidencia: 0,
-        dicDepartamento: 0,
-        dicTipoDocumento: 0,
-        dicProfesion: 0,
-        dicAreaTrabajo: 0,
-        dicAspiracionSalarial: 0,
-        nombres: 'Cristoher',
-        apellidoPaterno: 'Lazaro',
-        apellidoMaterno: '',
-        rutaFoto: '',
-        identificacion: '12345678',
-        correoElectronico: 'prueba@gmail.com',
-        telefonoCelular: '987654321',
-        direccionResidencia: 'Jr mar del plata 856',
-        anosExperiencia: '',
-        paisesTrabajar: '',
-        redesSociales: '',
-        descripcionPerfilProfesional: '',
-        genero: '',
-        movilidadLaboral: '',
-        idiomaNivel: '',
-        habilidades: '',
-        fechaNacimiento: '',
-        vigente: true,
-        tipoTextoHV: '',
-        colorHV: '',
-    });
+        globalUsuId: "",
+        globalUsuName: "",
+        globalUsuSurname: "",
+        globalUsuCellphone: "",
+        globalUsuEmail: "",
+        globalUsuRole: "",
+        globalBirthDate : "",
+        globalAddress : "",
+        globalGen : "",
+        globalUsuTipoDoc: "",
+        globalDocIdentidad: "",
+      });
 
     const onChangeCurriculum = (e) => {
         setCurriculum({ ...curriculum, [e.target.name]: e.target.value });
@@ -69,8 +55,6 @@ const Perfil = () => {
         let files = e.target.files;
         let reader = new FileReader();
         reader.readAsDataURL(files[0]);
-        console.log(files[0])
-
         reader.onload = (e) => {
             // let form = {
             //     imagenBase64: e.target.result.split('base64,')[1],
@@ -87,11 +71,27 @@ const Perfil = () => {
         };
     };
 
+    useEffect(()=>{
+        setCurriculum(getDataUser())
+    },[]);
+
+    const cerrar = () =>{
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.reload()
+    }
+
+
   return (
     <>
         <div className='p-6' >
-            <div className='text-slider font-bold text-[24px] font-principal'>
-                    Información Básica
+            <div className='flex items-center justify-between'>
+                <div className='text-slider font-bold text-[24px] font-principal'>
+                        Información Básica
+                </div>
+                <div className='flex items-center'>
+                    <UIButton onClick={cerrar}>Cerrar Sesión</UIButton>
+                </div>
             </div>
             <div className="p-4 mt-[30px] md:p-10 rounded-lg"
                 style={{ boxShadow: ' 0px 0px 30px rgba(0, 135, 174, 0.2)' }} >
@@ -182,8 +182,8 @@ const Perfil = () => {
                             type="text"
                             placeholder="Nombres"
                             className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                            name="nombres"
-                            value={curriculum.nombres}
+                            name="globalUsuName"
+                            value={curriculum.globalUsuName}
                             onChange={(e) => {
                                 onChangeCurriculum(e);
                             }}
@@ -194,9 +194,9 @@ const Perfil = () => {
                         <input
                             type="text"
                             placeholder="Apellido Paterno"
-                            name="apellidoPaterno"
+                            name="globalUsuSurname"
                             className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                            value={curriculum.apellidoPaterno}
+                            value={curriculum.globalUsuSurname}
                             onChange={(e) => {
                                 onChangeCurriculum(e);
                             }}
@@ -211,11 +211,11 @@ const Perfil = () => {
                             }}
                             options={tipoDocumento}
                             onChange={(e) => {
-                                onChangeCurriculumSelect(e, 'dicTipoDocumento');
+                                onChangeCurriculumSelect(e, 'globalUsuTipoDoc');
                             }}
                             placeholder="Seleccionar"
                             value={tipoDocumento.find(
-                                (x) => x.value === curriculum.dicTipoDocumento
+                                (x) => x.value === curriculum.globalUsuTipoDoc
                             )}
                         />
 
@@ -231,11 +231,11 @@ const Perfil = () => {
                                 type="text"
                                 placeholder="Número de documento"
                                 className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                                name="identificacion"
-                                // value={curriculum.identificacion}
-                                // onChange={(e) => {
-                                //     onChangeCurriculum(e);
-                                // }}
+                                name="globalDocIdentidad"
+                                value={curriculum.globalDocIdentidad}
+                                onChange={(e) => {
+                                    onChangeCurriculum(e);
+                                }}
                             />
                         </div>
                     </div>
@@ -244,9 +244,9 @@ const Perfil = () => {
                     <input
                         type="text"
                         placeholder="Correo electrónico"
-                        name="correoElectronico"
+                        name="globalUsuEmail"
                         className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                        value={curriculum.correoElectronico}
+                        value={curriculum.globalUsuEmail}
                         onChange={(e) => {
                             onChangeCurriculum(e);
                         }}
@@ -256,9 +256,9 @@ const Perfil = () => {
                     <input
                         type="text"
                         placeholder="Teléfono Celular"
-                        name="telefonoCelular"
+                        name="globalUsuCellphone"
                         className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                        value={curriculum.telefonoCelular}
+                        value={curriculum.globalUsuCellphone}
                         onChange={(e) => {
                             onChangeCurriculum(e);
                         }}
@@ -268,9 +268,9 @@ const Perfil = () => {
                     <input
                         type="date"
                         placeholder="Fecha de nacimiento"
-                        name="fechaNacimiento"
+                        name="globalBirthDate"
                         className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                        value={curriculum.fechaNacimiento}
+                        value={curriculum.globalBirthDate}
                         onChange={(e) => {
                             onChangeCurriculum(e);
                         }}
@@ -287,7 +287,7 @@ const Perfil = () => {
                                 style={{ width: 'auto' }}
                                 type="radio"
                                 id="r-male"
-                                name="genero"
+                                name="globalGen"
                                 value="M"
                                 onChange={(e) => {
                                     onChangeCurriculum(e);
@@ -300,7 +300,7 @@ const Perfil = () => {
                                 style={{ width: 'auto' }}
                                 type="radio"
                                 id="r-fem"
-                                name="genero"
+                                name="globalGen"
                                 value="F"
                                 onChange={(e) => {
                                     onChangeCurriculum(e);
@@ -316,9 +316,9 @@ const Perfil = () => {
                         <input
                             type="text"
                             placeholder="Dirección de domicilio"
-                            name="direccionResidencia"
+                            name="globalAddress"
                             className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
-                            value={curriculum.direccionResidencia}
+                            value={curriculum.globalAddress}
                             onChange={(e) => {
                                 onChangeCurriculum(e);
                             }}
