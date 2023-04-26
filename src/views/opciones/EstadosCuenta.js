@@ -5,6 +5,7 @@ import UIHeaderSub from '../../components/UIHeaderSub';
 import AuthContext from '../../context/authContext';
 import { getListPdf,getDocument } from '../../services/pdfServices';
 import { PDFReader } from 'react-read-pdf'
+import UIButton from '../../components/UIButton';
 
 const EstadosCuenta = () => {
     const {globalDataUser} = useContext(AuthContext);
@@ -14,6 +15,17 @@ const EstadosCuenta = () => {
     const [listaTemporada,setListaTemporada] = useState([])
     const [temporada,setTemporada]=useState('')
     const [listaPdfs,setListaPdfs] = useState([])
+    const [fileNameText,setFileNameText] = useState('')
+
+    const descargar = () => {
+        const downloadLink = document.createElement("a");
+        const fileName = fileNameText;
+    
+        downloadLink.href = pdf;
+        downloadLink.download = fileName;
+        downloadLink.click();
+      };
+    
     
     const obtenerList = () =>{
         try{
@@ -34,6 +46,7 @@ const EstadosCuenta = () => {
                     setListaPdfs(listaAuxpdf)
                     if(listaAuxpdf.length===1){
                         getDoc(listaAuxpdf[0].id)
+                        setFileNameText(listaAuxpdf[0].nombreArchivo)
                     }
                 }
             ).catch(err=>{
@@ -48,8 +61,7 @@ const EstadosCuenta = () => {
         try{
             getDocument(id).then(
                 res =>{
-                    console.log(res)
-                    setPdf(res)
+                    setPdf(`data:application/pdf;base64,${res}`)
                     setVerReporte(true)
                 }
             ).catch(err=>{
@@ -156,7 +168,7 @@ const EstadosCuenta = () => {
                     {
                      listaPdfs.map((element,i)=>{
                         return(
-                            <div className='py-[8px] flex cursor-pointer' onClick={()=>{getDoc(element.id)}} >
+                            <div className='py-[8px] flex cursor-pointer' onClick={()=>{getDoc(element.id);setFileNameText(element.nombreArchivo)}} >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                                 </svg>
@@ -166,19 +178,25 @@ const EstadosCuenta = () => {
                      })   
                     }
                 </div>
-                <div className='md:w-[80%] mx-auto mt-[60px]'>
+                <div  className='md:w-[80%] mx-auto mt-[60px]'>
                     
                     {
                         verRerporte && (
                             // <PDFReader data={window.atob(pdf.split('data:application/pdf;base64,')[1])} />
+                            <>
+                            <div className='w-[200px] mx-auto mt-[40px] mb-[20px]'>
+                                <UIButton onClick={descargar}>Descargar</UIButton>
+                            </div>
                             <embed
-                            src={pdf}
+                            src={`${pdf}#toolbar=0&navpanes=0&scrollbar=0&zoom=80`}
                             type="application/pdf"
                             width="100%"
                             height="900px"
-                            id='0'
+                            id='dasdas'
                             >
                             </embed>
+                            </>
+                            
                         )
                     }
 
