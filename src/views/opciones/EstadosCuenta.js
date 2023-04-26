@@ -17,7 +17,7 @@ const EstadosCuenta = () => {
     
     const obtenerList = () =>{
         try{
-            getListPdf(globalDataUser.globalDataUser.globalUsuId).then(
+            getListPdf(1).then(
                 res =>{
                     console.log(res)
                     let dataAux = []
@@ -48,6 +48,7 @@ const EstadosCuenta = () => {
         try{
             getDocument(id).then(
                 res =>{
+                    console.log(res)
                     setPdf(res)
                     setVerReporte(true)
                 }
