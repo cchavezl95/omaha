@@ -3,6 +3,7 @@ import UIInput from '../../components/UIInput'
 import UIButton from '../../components/UIButton';
 import AuthContext from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../services/login';
 
 const Login = () => {
 
@@ -21,33 +22,42 @@ const Login = () => {
     };
 
     const onSubmit = () =>{
-
-        if(user == "42554388" || user== "07271049" ){
-            if(password.length == 0 ){
-                setMerror('Debe ingresar una contraseña')
-            }else{
-                let data = {
-                    globalUsuId: "1",
-                    globalUsuName: "JUAN CARLOS",
-                    globalUsuSurname: "PEREZ LOPEZ",
-                    globalUsuCellphone: "999999999",
-                    globalUsuEmail: "stnperu@gmail.com",
-                    globalUsuRole: "2",
-                    globalBirthDate : "1995-03-09",
-                    globalAddress : "JR MAR DE LA PLATA 172 SJ",
-                    globalGen : "M",
-                    globalUsuTipoDoc: "DNI",
-                    globalDocIdentidad: user,
-                  }
-                  localStorage.setItem(
-                      'user',
-                      JSON.stringify(data)
-                  );
-                  globalIniciarSesion(data)
-                  navigate('/auth')
-            }
-        }else{
-            setMerror('Usuario no registrado')
+        let json = {
+            user : user,
+            password : password
+        }
+        if(password.length == 0 ){
+            setMerror('Debe ingresar una contraseña')
+        }
+        try{
+            login(json).then( res =>{
+                if(res?.isAuthenticated){
+                    let data = {
+                        globalUsuId: 1,
+                        globalUsuName: res.nameUser,
+                        globalUsuSurname: res.lastName,
+                        globalUsuCellphone: "999999999",
+                        globalUsuEmail: res.email,
+                        globalUsuRole: res.roles,
+                        globalBirthDate : "",
+                        globalAddress : "",
+                        globalGen : res.gender,
+                        globalUsuTipoDoc: "DNI",
+                        globalDocIdentidad: res.userName,
+                      }
+                      localStorage.setItem(
+                        'user',
+                        JSON.stringify(data)
+                    );
+                    globalIniciarSesion(data)
+                    navigate('/auth')
+                }else{
+                    setMerror('Usuario no registrado')
+                }
+            })
+        } catch (e){
+            console.log(e)
+            setMerror('Problemas de autenticación')
         }
     }
 

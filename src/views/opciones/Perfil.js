@@ -35,13 +35,16 @@ const Perfil = () => {
 
     const onChangeCurriculum = (e) => {
         setCurriculum({ ...curriculum, [e.target.name]: e.target.value });
-        if (e.target.name === 'genero') {
+        console.log(e.target.name)
+        if (e.target.name === 'globalGen') {
             if (e.target.value === 'M') {
                 validaGenero.male = true;
                 validaGenero.fem = false;
+                setCurriculum({...curriculum,globalGen:'Masculino'});
             } else {
                 validaGenero.male = false;
                 validaGenero.fem = true;
+                setCurriculum({...curriculum,globalGen:'Femenino'});
             }
         }
     };
@@ -246,7 +249,7 @@ const Perfil = () => {
                         }}
                     />
 
-                    {/* <p>Teléfono Celular</p> */}
+                    {/* <p>Teléfono Celular</p>
                     <input
                         type="text"
                         placeholder="Teléfono Celular"
@@ -256,9 +259,9 @@ const Perfil = () => {
                         onChange={(e) => {
                             onChangeCurriculum(e);
                         }}
-                    />
+                    /> */}
 
-                    {/* <p>Fecha de nacimiento</p> */}
+                    {/* <p>Fecha de nacimiento</p>
                     <input
                         type="date"
                         placeholder="Fecha de nacimiento"
@@ -268,7 +271,7 @@ const Perfil = () => {
                         onChange={(e) => {
                             onChangeCurriculum(e);
                         }}
-                    />
+                    /> */}
 
                     <div className="comparasalario__group">
                         <span className="text-[16px] block mb-2 font-semibold">
@@ -305,8 +308,8 @@ const Perfil = () => {
                         </div>
                     </div>
 
-                    <div className="comparasalario__group">
-                        {/* <p>Dirección de domicilio</p> */}
+                    {/* <div className="comparasalario__group">
+                        <p>Dirección de domicilio</p>
                         <input
                             type="text"
                             placeholder="Dirección de domicilio"
@@ -317,7 +320,7 @@ const Perfil = () => {
                                 onChangeCurriculum(e);
                             }}
                         />
-                    </div>
+                    </div> */}
 
                 </div>
                 

@@ -7,7 +7,7 @@ import Comunicado from '../opciones/Comunicado';
 
 const Profile = () => {
 
-    const [idVista,setIdVista] = useState(1)
+    const [idVista,setIdVista] = useState(2)
     
     let component ;
 
