@@ -17,7 +17,7 @@ const AuthState = (props) => {
           globalUsuRole: "",
           globalBirthDate : "",
           globalAddress : "",
-          globalGen : "",
+          globalGen : 1,
           globalUsuTipoDoc: "",
           globalDocIdentidad: "",
         },

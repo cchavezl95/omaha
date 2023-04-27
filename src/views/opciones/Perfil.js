@@ -5,10 +5,13 @@ import UIButton from '../../components/UIButton';
 import AuthContext from '../../context/authContext';
 import { getDataUser } from '../../hooks/utilities';
 import UIHeaderSub from '../../components/UIHeaderSub';
+import { getPic,setPic,updateUser } from '../../services/profileServices';
+import Swal from 'sweetalert2';
 
 const Perfil = () => {
 
     const {globalDataUser,globalCerrarSesion} = useContext(AuthContext);
+    const [picture,setPicture] = useState('')
 
     const [validaGenero, setValidaGenero] = useState({
         male: true,
@@ -28,63 +31,106 @@ const Perfil = () => {
         globalUsuRole: "",
         globalBirthDate : "",
         globalAddress : "",
-        globalGen : "",
+        globalGen : 1,
         globalUsuTipoDoc: "",
         globalDocIdentidad: "",
       });
 
     const onChangeCurriculum = (e) => {
         setCurriculum({ ...curriculum, [e.target.name]: e.target.value });
-        console.log(e.target.name)
         if (e.target.name === 'globalGen') {
-            if (e.target.value === 'M') {
+            if (e.target.value === '1') {
                 validaGenero.male = true;
                 validaGenero.fem = false;
-                setCurriculum({...curriculum,globalGen:'Masculino'});
+                setCurriculum({...curriculum,globalGen:'1'});
             } else {
                 validaGenero.male = false;
                 validaGenero.fem = true;
-                setCurriculum({...curriculum,globalGen:'Femenino'});
+                setCurriculum({...curriculum,globalGen:'2'});
             }
         }
     };
 
-    const [imgPerfil, setImgPerfil] = useState('/assets/img/img_profile.svg');
+    const [imgPerfil, setImgPerfil] = useState('');
     const [sinPerfil, setSinPerfil] = useState(true);
+
     const tipoDocumento = [
         {value:'DNI',label:'DNI'},
         {value:'CE',label:'CE'},
     ]
+
     const cargaImagen = async (e) => {
         let files = e.target.files;
         let reader = new FileReader();
         reader.readAsDataURL(files[0]);
         reader.onload = (e) => {
-            // let form = {
-            //     imagenBase64: e.target.result.split('base64,')[1],
-            //     idImagen: e.target.result.split('base64,')[0] + 'base64,',
-            //     tipoArchivo: 'imagen',
-            // };
-
-            // savePhotoCurriculum(getToken(), form).then((res) => {
-            //     getPhoto();
-            // });
-            setImgPerfil(e.target.result);
-            setSinPerfil(false);
-
+            let form = {
+                idUser : 1,
+                nombreArchivo : files[0].name,
+                profilePic : e.target.result.split('base64,')[1]
+            }
+            setPic(form).then(res=>{
+                getPicture()
+            }).catch(err=>{
+                console.log(err)
+            })
         };
     };
 
-    useEffect(()=>{
-        setCurriculum(getDataUser())
-    },[]);
-
-    const cerrar = () =>{
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.reload()
+    const updateUserC = () =>{
+        try{
+            let form={
+                idUser : 1,
+                usuario : curriculum.globalDocIdentidad,
+                nombres: curriculum.globalUsuName,
+                apellidos: curriculum.globalUsuSurname,
+                correo: curriculum.globalUsuEmail,
+                gender : parseInt(curriculum.globalGen)
+            }
+            console.log(form)
+            updateUser(form).then(res=>{
+                console.log(res)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Se actualizaron los datos',
+                    showConfirmButton: false,
+                    timer: 1500
+                  })
+            })
+        }catch(err){
+            console.log(err)
+        }
     }
 
+    useEffect(()=>{
+        setCurriculum(getDataUser())
+        if (getDataUser().globalGen === 1) {
+            validaGenero.male = true;
+            validaGenero.fem = false;
+        } else {
+            validaGenero.male = false;
+            validaGenero.fem = true;
+        }
+        getPicture()
+    },[]);
+
+    const getPicture = () =>{
+        let sinCarga = '/assets/img/img_profile.svg';
+        try{
+            getPic(1).then(res=>{
+                if(res?.nombreArchivo.length >0){
+                    let formato = res.nombreArchivo.split('.')[1]
+                    setImgPerfil(`data:image/${formato};base64,${res.pic}`)
+                    setSinPerfil(false)
+                }else{
+                    setImgPerfil(sinCarga);
+                    setSinPerfil(true);
+                }
+            })
+        }catch(err){
+            console.log(err)
+        }
+    }
 
   return (
     <>
@@ -233,6 +279,7 @@ const Perfil = () => {
                                 onChange={(e) => {
                                     onChangeCurriculum(e);
                                 }}
+                                disabled={true}
                             />
                         </div>
                     </div>
@@ -285,7 +332,7 @@ const Perfil = () => {
                                 type="radio"
                                 id="r-male"
                                 name="globalGen"
-                                value="M"
+                                value="1"
                                 onChange={(e) => {
                                     onChangeCurriculum(e);
                                 }}
@@ -298,7 +345,7 @@ const Perfil = () => {
                                 type="radio"
                                 id="r-fem"
                                 name="globalGen"
-                                value="F"
+                                value="2"
                                 onChange={(e) => {
                                     onChangeCurriculum(e);
                                 }}
@@ -325,7 +372,7 @@ const Perfil = () => {
                 </div>
                 
                 <div className='w-[200px] mx-auto mt-[40px]'>
-                <UIButton>Actualizar datos</UIButton>
+                <UIButton onClick={updateUserC} >Actualizar datos</UIButton>
                 </div>
 
 

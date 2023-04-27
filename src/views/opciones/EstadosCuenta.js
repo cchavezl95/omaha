@@ -1,10 +1,8 @@
 import React, { useState,useContext, useEffect } from 'react'
 import Select from 'react-select'
-import { getDataUser } from '../../hooks/utilities'
 import UIHeaderSub from '../../components/UIHeaderSub';
 import AuthContext from '../../context/authContext';
 import { getListPdf,getDocument } from '../../services/pdfServices';
-import { PDFReader } from 'react-read-pdf'
 import UIButton from '../../components/UIButton';
 
 const EstadosCuenta = () => {

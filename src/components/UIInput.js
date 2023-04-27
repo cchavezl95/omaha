@@ -40,7 +40,7 @@ const UIInput = (
                 <input
                     tabIndex="-1"
                     type="checkbox"
-                    onClick={() => setInitialType(!initialType)}
+                    onClick={() => {setInitialType(!initialType)}}
                     className="absolute z-10 p-2 mt-1 ml-1 cursor-pointer "
                     style={{ WebkitAppearance: 'none' }}
                     name={`${label}${className}`}
@@ -85,7 +85,7 @@ const UIInput = (
         <input
             onFocus={() => setOnFocus(true)}
             onBlur={() => setOnFocus(false)}
-            className="absolute w-full h-full p-4 text-[#222B45] px-2 pb-2 text-[15px] bg-transparent border-none outline-none z-2"
+            className="w-full h-full p-4 text-[#222B45] px-2 pb-2 text-[15px] bg-transparent border-none outline-none"
             type={initialType ? type : 'text'}
             value={value}
             onChange={onChange}
