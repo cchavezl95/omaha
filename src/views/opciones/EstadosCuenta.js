@@ -16,7 +16,7 @@ const EstadosCuenta = () => {
     const [temporada,setTemporada]=useState('')
     const [listaPdfs,setListaPdfs] = useState([])
     const [fileNameText,setFileNameText] = useState('')
-
+    const [listaTotal,setListaTotal] = useState([])
     const descargar = () => {
         const downloadLink = document.createElement("a");
         const fileName = fileNameText;
@@ -31,17 +31,15 @@ const EstadosCuenta = () => {
         try{
             getListPdf(1).then(
                 res =>{
-                    console.log(res)
+                    setListaTotal(res)
                     let dataAux = []
                     for(const iterator of res){
                         if(dataAux.filter(x => x.value == iterator?.periodo).length == 0){
                             dataAux.push({value:iterator?.periodo,label:iterator?.periodo})
-                            if(temporada == ''){
-                                setTemporada(iterator?.periodo)
-                            }
                         }
                     }
                     let listaAuxpdf = res.filter(x => x.periodo == dataAux[0].value)
+                    setTemporada(dataAux[0].value)
                     setListaTemporada(dataAux)
                     setListaPdfs(listaAuxpdf)
                     if(listaAuxpdf.length===1){
@@ -73,26 +71,12 @@ const EstadosCuenta = () => {
     }
 
     const OnclickTemporada = (e) =>{
-        console.log(e)
-    }
-
-
-
-    const mostrarReporte = (e) =>{
-        let doc = getDataUser().globalDocIdentidad
-        let tempAux = e.target.value
-        let temp = tempAux.replace('-','')
-        let url = `/assets/${doc}_${temp}.pdf`
-        if(url == "/assets/07271049_202303.pdf"
-        || url == "/assets/42554388_202301.pdf"
-        || url == "/assets/42554388_202302.pdf" 
-        || url == "/assets/42554388_202303.pdf"){
-            setPdf(`${url}#navpanes=0&scrollbar=0`)
-            setVerReporte(true)
-            
-        }else{
-            setMsg('Sin Resultados')
-            setVerReporte(true)
+        setTemporada(e.value)
+        let data = listaTotal.filter(x => x.periodo == e.value)
+        setListaPdfs(data)
+        if(data.length===1){
+            getDoc(data[0].id)
+            setFileNameText(data[0].nombreArchivo)
         }
     }
 
@@ -145,6 +129,7 @@ const EstadosCuenta = () => {
                             value={listaTemporada.find(
                                 x => x.value === temporada
                             )}
+                            onChange={(e)=>{OnclickTemporada(e)}}
                         />
                     </div>
                     {/* <div>
@@ -168,9 +153,9 @@ const EstadosCuenta = () => {
                     {
                      listaPdfs.map((element,i)=>{
                         return(
-                            <div className='py-[8px] flex cursor-pointer' onClick={()=>{getDoc(element.id);setFileNameText(element.nombreArchivo)}} >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                            <div key={i} className='py-[8px] flex cursor-pointer' onClick={()=>{getDoc(element.id);setFileNameText(element.nombreArchivo)}} >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                                 </svg>
                                 {element.nombreArchivo}
                             </div>
