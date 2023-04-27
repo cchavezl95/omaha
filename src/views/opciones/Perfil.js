@@ -42,11 +42,11 @@ const Perfil = () => {
             if (e.target.value === '1') {
                 validaGenero.male = true;
                 validaGenero.fem = false;
-                setCurriculum({...curriculum,globalGen:'1'});
+                setCurriculum({...curriculum,globalGen:1});
             } else {
                 validaGenero.male = false;
                 validaGenero.fem = true;
-                setCurriculum({...curriculum,globalGen:'2'});
+                setCurriculum({...curriculum,globalGen:2});
             }
         }
     };
@@ -85,11 +85,12 @@ const Perfil = () => {
                 nombres: curriculum.globalUsuName,
                 apellidos: curriculum.globalUsuSurname,
                 correo: curriculum.globalUsuEmail,
-                gender : parseInt(curriculum.globalGen)
+                gender : curriculum.globalGen
             }
-            console.log(form)
             updateUser(form).then(res=>{
-                console.log(res)
+                localStorage.setItem(
+                    'user',
+                    JSON.stringify(curriculum))
                 Swal.fire({
                     icon: 'success',
                     title: 'Se actualizaron los datos',
