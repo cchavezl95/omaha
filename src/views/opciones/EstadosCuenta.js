@@ -9,7 +9,7 @@ const EstadosCuenta = () => {
     const {globalDataUser} = useContext(AuthContext);
     const [pdf,setPdf]= useState('');
     const [verRerporte,setVerReporte] = useState(false)
-    const [msg,setMsg] = useState('')
+    // const [msg,setMsg] = useState('')
     const [listaTemporada,setListaTemporada] = useState([])
     const [temporada,setTemporada]=useState('')
     const [listaPdfs,setListaPdfs] = useState([])
@@ -29,15 +29,14 @@ const EstadosCuenta = () => {
         try{
             getListPdf(globalDataUser.globalDataUser.globalUsuId).then(
                 res =>{
-                    console.log(res)
                     setListaTotal(res)
                     let dataAux = []
                     for(const iterator of res){
-                        if(dataAux.filter(x => x.value == iterator?.periodo).length == 0){
+                        if(dataAux.filter(x => x.value === iterator?.periodo).length === 0){
                             dataAux.push({value:iterator?.periodo,label:iterator?.periodo})
                         }
                     }
-                    let listaAuxpdf = res.filter(x => x.periodo == dataAux[0].value)
+                    let listaAuxpdf = res.filter(x => x.periodo === dataAux[0].value)
                     setTemporada(dataAux[0].value)
                     setListaTemporada(dataAux)
                     setListaPdfs(listaAuxpdf)
@@ -71,7 +70,7 @@ const EstadosCuenta = () => {
 
     const OnclickTemporada = (e) =>{
         setTemporada(e.value)
-        let data = listaTotal.filter(x => x.periodo == e.value)
+        let data = listaTotal.filter(x => x.periodo === e.value)
         setListaPdfs(data)
         if(data.length===1){
             getDoc(data[0].id)

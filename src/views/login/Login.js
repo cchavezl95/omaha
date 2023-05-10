@@ -12,7 +12,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(false);
     const [Merror, setMerror] = useState(false);
-    const [show, setShow] = useState(false);
+    // const [show, setShow] = useState(false);
     let navigate = useNavigate();
     const handleChange = (e) => {
         setUser(e);
@@ -28,7 +28,7 @@ const Login = () => {
             user : user,
             password : password
         }
-        if(password.length == 0 ){
+        if(password.length === 0 ){
             setMerror('Debe ingresar una contraseña')
         }
         try{
