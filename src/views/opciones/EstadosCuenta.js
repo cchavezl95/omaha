@@ -27,8 +27,9 @@ const EstadosCuenta = () => {
     
     const obtenerList = () =>{
         try{
-            getListPdf(1).then(
+            getListPdf(globalDataUser.globalDataUser.globalUsuId).then(
                 res =>{
+                    console.log(res)
                     setListaTotal(res)
                     let dataAux = []
                     for(const iterator of res){
@@ -111,7 +112,7 @@ const EstadosCuenta = () => {
                         />
                     </div> */}
                     <div>
-                        <p className='mb-[5px] font-bold text-[16px] font-principal'>Temporada</p>
+                        <p className='mb-[5px] font-bold text-[16px] font-principal'>Periodo(año-mes)</p>
                         <Select 
                             className="flex h-full"
                             styles={{
@@ -147,7 +148,7 @@ const EstadosCuenta = () => {
                     </div> */}
                 </div>
                 <div className='w-full mt-[20px]' >
-                <p className='mb-[5px] font-bold text-[16px] font-principal'>Estados Disponibles</p>
+                <p className='mb-[5px] font-bold text-[16px] font-principal'>Estados de Cuenta</p>
                     {
                      listaPdfs.map((element,i)=>{
                         return(

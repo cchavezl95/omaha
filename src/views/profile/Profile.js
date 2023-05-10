@@ -1,31 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import UISlider from '../../components/UISlider'
-import Perfil from '../opciones/Perfil';
 import EstadosCuenta from '../opciones/EstadosCuenta';
 import Reportes from '../opciones/Reportes';
-import Comunicado from '../opciones/Comunicado';
 
 const Profile = () => {
 
-    const [idVista,setIdVista] = useState(2)
+    const [idVista,setIdVista] = useState(1)
     
     let component ;
 
     switch(idVista){
         case 1 : 
-        component=<Perfil />;
-        break;
-        case 2 : 
         component=<EstadosCuenta />;
         break;
-        case 3 : 
-        component=<Comunicado />;
-        break;
-        case 4 : 
+        case 2 : 
         component=<Reportes />;
         break;
         default :
-        component=<Perfil />;
+        component=<EstadosCuenta />;
         break;
     }
 
