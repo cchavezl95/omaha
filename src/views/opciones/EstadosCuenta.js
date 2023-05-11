@@ -7,6 +7,7 @@ import UIButton from '../../components/UIButton';
 
 const EstadosCuenta = () => {
     const {globalDataUser} = useContext(AuthContext);
+    console.log(globalDataUser)
     const [pdf,setPdf]= useState('');
     const [verRerporte,setVerReporte] = useState(false)
     // const [msg,setMsg] = useState('')

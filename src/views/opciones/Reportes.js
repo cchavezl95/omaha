@@ -1,6 +1,9 @@
-import React from 'react'
-import UIButton from '../../components/UIButton'
+import React, { useState,useContext, useEffect } from 'react'
+import Select from 'react-select'
 import UIHeaderSub from '../../components/UIHeaderSub';
+import AuthContext from '../../context/authContext';
+import { getListPdf,getDocument, getPeriodoReportes, getTipoFondo, getListPdfReportes, getDocumentReporte } from '../../services/pdfServices';
+import UIButton from '../../components/UIButton';
 
 const CircleGraphic = ({ strokeDashoffset, name,color }) => {
     return (
@@ -43,151 +46,218 @@ const CircleGraphic = ({ strokeDashoffset, name,color }) => {
   };
 
 const Reportes = () => {
+ const {globalDataUser} = useContext(AuthContext);
+    const [pdf,setPdf]= useState('');
+    const [verRerporte,setVerReporte] = useState(false)
+    // const [msg,setMsg] = useState('')
+    const [listaTemporada,setListaTemporada] = useState([])
+    const [temporada,setTemporada]=useState('')
+    const [listaTipoFondo,setListaTipoFondo] = useState([])
+    const [tipoFondo,setTipoFondo]=useState('')
+    const [listaPdfs,setListaPdfs] = useState([])
+    const [fileNameText,setFileNameText] = useState('')
+    const [listaTotal,setListaTotal] = useState([])
+    const descargar = () => {
+        const downloadLink = document.createElement("a");
+        const fileName = fileNameText;
+    
+        downloadLink.href = pdf;
+        downloadLink.download = fileName;
+        downloadLink.click();
+      };
+    
+    
+    const obtenerList = () =>{
+        try{
+            getListPdf(globalDataUser.globalDataUser.globalUsuId).then(
+                res =>{
+                    setListaTotal(res)
+                    let dataAux = []
+                    for(const iterator of res){
+                        if(dataAux.filter(x => x.value === iterator?.periodo).length === 0){
+                            dataAux.push({value:iterator?.periodo,label:iterator?.periodo})
+                        }
+                    }
+                    let listaAuxpdf = res.filter(x => x.periodo === dataAux[0].value)
+                    setTemporada(dataAux[0].value)
+                    setListaTemporada(dataAux)
+                    setListaPdfs(listaAuxpdf)
+                    if(listaAuxpdf.length===1){
+                        getDoc(listaAuxpdf[0].id)
+                        setFileNameText(listaAuxpdf[0].nombreArchivo)
+                    }
+                }
+            ).catch(err=>{
+                console.log(err)
+            })
+        }catch(err){
+            console.log(err)
+        }
+    }
 
-    let graphic = [
-        {value:60,name:'Porcentaje de ventas',color:'#407373'},
-        {value:24,name:'Días transcurridos',color:'#6AA1A1'},
-        {value:30,name:'Reparación',color:'#927F54'},
-        {value:70,name:'Reemplazo',color:'#886262'},
-    ]
+    const getDoc = (id) =>{
+        try{
+            getDocument(id).then(
+                res =>{
+                    setPdf(`data:application/pdf;base64,${res}`)
+                    setVerReporte(true)
+                }
+            ).catch(err=>{
+                console.log(err)
+            })
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    const OnclickTemporada = (e) =>{
+        setTemporada(e.value)
+        getListPdfReportes(tipoFondo,e.value).then(
+            res=>{
+                setListaPdfs(res)
+                if(res.length === 1){
+                    getDocumentReporte(res[0].id)
+                    setFileNameText(res[0].nombreArchivo)
+                    getDoc(res[0].id)
+                }
+            }
+        ).catch(err=>{
+            console.log(err)
+        });
+    }
+
+    const GetFiltros = (e) =>{
+        getPeriodoReportes().then(res =>{
+            let dataAux = []
+                    for(const iterator of res){
+                        if(dataAux.filter(x => x.value === iterator).length === 0){
+                            dataAux.push({value:iterator,label:iterator})
+                        }
+                    }
+            setListaTemporada(dataAux)
+        }).catch(err=>{
+            console.log(err)
+        });
+        getTipoFondo().then(res =>{
+            let dataAux = []
+                    for(const iterator of res){
+                        if(dataAux.filter(x => x.value === iterator).length === 0){
+                            dataAux.push({value:iterator,label:iterator})
+                        }
+                    }
+            setListaTipoFondo(dataAux)
+        }).catch(err=>{
+            console.log(err)
+        });
+    }
+
+    useEffect(()=>{
+        // obtenerList();
+        GetFiltros()
+    },[globalDataUser])
 
   return (
     <>
-    <div className='p-6' >
-        <UIHeaderSub title="Reportes" />
-        <div className="mt-[30px] rounded-lg">
-            <div className='flex items-center justify-between'>
-                <div className='flex items-center justify-start w-[85%]'>
-                    <div className="grid md:grid-cols-5 grid-cols-1 gap-[2rem] w-[85%]" >
-                        <div>
-                            <p className='mb-[5px] font-bold text-[10px] font-principal' >Línea de negocio</p>
-                            <select className='w-full py-[5px] outline-none border-[1px] border-[#797D86] rounded-md px-[2px]'>
-                                <option value="" defaultValue>Choose a country</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="FR">France</option>
-                                <option value="DE">Germany</option>
-                            </select>
-                        </div>
-                        <div>
-                            <p className='mb-[5px] font-bold text-[10px] font-principal' >Nombre de tienda</p>
-                            <select className='w-full py-[5px] outline-none border-[1px] border-[#797D86] rounded-md px-[2px]'>
-                                <option value="" defaultValue>Choose a country</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="FR">France</option>
-                                <option value="DE">Germany</option>
-                            </select>
-                        </div>
-                        <div>
-                            <p className='mb-[5px] font-bold text-[10px] font-principal' >Código de vendedor</p>
-                            <select className='w-full py-[5px] outline-none border-[1px] border-[#797D86] rounded-md px-[2px]'>
-                                <option value="" defaultValue>Choose a country</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="FR">France</option>
-                                <option value="DE">Germany</option>
-                            </select>
-                        </div>
-                        <div>
-                            <p className='mb-[5px] font-bold text-[10px] font-principal' >Desde</p>
-                            <input
-                            type="date"
+        <div className='p-6' >
+            <UIHeaderSub title="Reportes" ></UIHeaderSub>
+            <div className="p-4 mt-[30px] md:p-10 rounded-lg">
+                <div className="md:w-full grid md:grid-cols-3 grid-cols-1 gap-[2rem] mx-auto" >
+                    <div>
+                    <p className='mb-[5px] font-bold text-[16px] font-principal'>Tipo de fondo</p>
+                    <Select
+                            className="flex h-full"
+                            styles={{
+                                control: (baseStyles, state) => ({
+                                  ...baseStyles,
+                                    width:"100%",
+                                    borderColor:"#797D86",
+                                    height:"56.56px"
+                                }),
+                              }}
+                            options={listaTipoFondo}
+                            placeholder="Seleccionar"
+                            value={listaTipoFondo.find(
+                                x => x.value === tipoFondo
+                            )}
+                            onChange={(e)=>{setTipoFondo(e.value)}}
+                        />
+                    </div>
+                    <div>
+                        <p className='mb-[5px] font-bold text-[16px] font-principal'>Periodo(año-mes)</p>
+                        <Select 
+                            className="flex h-full"
+                            styles={{
+                                control: (baseStyles, state) => ({
+                                  ...baseStyles,
+                                    width:"100%",
+                                    borderColor:"#797D86",
+                                    height:"56.56px"
+                                }),
+                              }}
+                            options={listaTemporada}
+                            placeholder="Seleccionar"
+                            value={listaTemporada.find(
+                                x => x.value === temporada
+                            )}
+                            onChange={(e)=>{OnclickTemporada(e)}}
+                        />
+                    </div>
+                    {/* <div>
+                    <p className='mb-[5px] font-bold text-[16px] font-principal'>Mes</p>
+                        <input
+                            type="month"
                             placeholder="Fecha de nacimiento"
                             name="fechaNacimiento"
-                            className="w-full py-[5px] outline-none border-[1px] border-[#797D86] rounded-md px-[2px]"
+                            className="w-full py-[.9rem] outline-none border-[1px] border-[#797D86] rounded-md px-[1.5rem]"
                             // value={curriculum.fechaNacimiento}
                             onChange={(e) => {
                                 // onChangeCurriculum(e);
-                                // setVerReporte(true)
+                                //setVerReporte(true)
+                                mostrarReporte(e)
                             }}
                         />
-                        </div>
-                        <div>
-                            <p className='mb-[5px] font-bold text-[10px] font-principal' >Hasta</p>
-                            <input
-                            type="date"
-                            placeholder="Fecha de nacimiento"
-                            name="fechaNacimiento"
-                            className="w-full py-[5px] outline-none border-[1px] border-[#797D86] rounded-md px-[2px]"
-                            // value={curriculum.fechaNacimiento}
-                            onChange={(e) => {
-                                // onChangeCurriculum(e);
-                                // setVerReporte(true)
-                            }}
-                        />
-                        </div>
-                    </div> 
+                    </div> */}
                 </div>
-                <div className='flex items-center'>
-                    <UIButton>Limpiar Filtros</UIButton>
-                </div>
-            </div>
-            <div className='flex mt-[50px] mb-[80px]' >
-                <div className='p-[10px] w-1/3' >
-                   <div className='border-solid border rounded-lg text-center py-[10px]'>
-                            <p className='text-slider font-bold font-principal text-[16px]'>Acumulado</p>
-                            <div className='w-full flex mt-[20px]' >
-                                <div className='w-1/2' >
-                                    <p className='text-slider font-bold font-principal text-[36px]'>54K</p>
-                                    <p className='text-[#927F54] font-principal text-[16px]'>Total de ventas</p>
-                                </div>
-                                <div className='w-1/2' >
-                                <p className='text-slider font-bold font-principal text-[36px]'>16M</p>
-                                    <p className='text-[#927F54] font-principal text-[16px]'>Σ Precio GE</p>
-                                </div>
+                <div className='w-full mt-[20px]' >
+                <p className='mb-[5px] font-bold text-[16px] font-principal'>Estados de Cuenta</p>
+                    {
+                     listaPdfs.map((element,i)=>{
+                        return(
+                            <div key={i} className='py-[8px] flex cursor-pointer' onClick={()=>{getDoc(element.id);setFileNameText(element.nombreArchivo)}} >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                                </svg>
+                                {element.nombreArchivo}
                             </div>
-                    </div>         
+                        )
+                     })   
+                    }
                 </div>
-                <div className='p-[10px] w-1/3' >
-                    <div className='border-solid border rounded-lg text-center py-[10px]'>
-                            <p className='text-slider font-bold font-principal text-[16px]'>Promedio mes</p>
-                            <div className='w-full flex mt-[20px]' >
-                                <div className='w-1/2' >
-                                    <p className='text-slider font-bold font-principal text-[36px]'>15K</p>
-                                    <p className='text-[#927F54] font-principal text-[16px]'>Total de ventas</p>
-                                </div>
-                                <div className='w-1/2' >
-                                <p className='text-slider font-bold font-principal text-[36px]'>5M</p>
-                                    <p className='text-[#927F54] font-principal text-[16px]'>Σ Precio GE</p>
-                                </div>
+                <div  className='md:w-[80%] mx-auto mt-[60px]'>
+                    
+                    {
+                        verRerporte && (
+                            // <PDFReader data={window.atob(pdf.split('data:application/pdf;base64,')[1])} />
+                            <>
+                            <div className='w-[200px] mx-auto mt-[40px] mb-[20px]'>
+                                <UIButton onClick={descargar}>Descargar</UIButton>
                             </div>
-                    </div>        
-                </div>
-                <div className='p-[10px] w-1/3' >
-                    <div className='border-solid border rounded-lg text-center py-[10px]'>
-                                <div className='w-full flex mt-[20px]' >
-                                    <div className='w-1/2' >
-                                    <p className='text-slider font-bold font-principal text-[16px]'>Mayor Venta</p>
-                                        <p className='text-slider font-bold font-principal text-[36px]'>10K</p>
-                                        <p className='text-[#927F54] font-principal text-[16px]'>San Miguel</p>
-                                    </div>
-                                    <div className='w-1/2' >
-                                    <p className='text-slider font-bold font-principal text-[16px]'>Menor Venta</p>
-                                    <p className='text-slider font-bold font-principal text-[36px]'>5K</p>
-                                        <p className='text-[#927F54] font-principal text-[16px]'>Los Olivos</p>
-                                    </div>
-                                </div>
-                        </div>        
+                            <embed
+                            src={`${pdf}#toolbar=0&navpanes=0&scrollbar=0&zoom=80`}
+                            type="application/pdf"
+                            width="100%"
+                            height="900px"
+                            id='dasdas'
+                            >
+                            </embed>
+                            </>
+                            
+                        )
+                    }
+
                 </div>
             </div>
         </div>
-    </div>
-    <div style={{backgroundColor:"rgba(169, 170, 165, 0.18)"}}
-        className='py-[20px] px-[40px] h-auto'
-    >
-        <div className='text-black text-[40px] font-principal font-bold'>KPI</div>
-        <div className="flex flex-wrap items-center justify-center gap-7 mt-10">
-        {graphic.map((v, index) => (
-          <CircleGraphic
-            key={index}
-            strokeDashoffset={-v.value}
-            name={v.name}
-            color={v.color}
-          />
-        ))}
-        </div>
-    </div>
     </>
   )
 }

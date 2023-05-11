@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import UISlider from '../../components/UISlider'
 import EstadosCuenta from '../opciones/EstadosCuenta';
 import Reportes from '../opciones/Reportes';
+import ResetUsers from '../opciones/ResetUsers';
 
 const Profile = () => {
 
@@ -15,6 +16,9 @@ const Profile = () => {
         break;
         case 2 : 
         component=<Reportes />;
+        break;
+        case 3 : 
+        component=<ResetUsers />;
         break;
         default :
         component=<EstadosCuenta />;

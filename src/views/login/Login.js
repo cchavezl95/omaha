@@ -51,7 +51,10 @@ const Login = () => {
                         'user',
                         JSON.stringify(data)
                     );
-                    globalIniciarSesion(data)
+                    globalIniciarSesion({
+                        globalDataUser : data,
+                        globalAutenticado : true,
+                      })
                     navigate('/auth')
                 }else{
                     setMerror('Usuario no registrado')
