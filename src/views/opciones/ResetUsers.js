@@ -44,9 +44,9 @@ const ResetUsers = () => {
   return (
     <>
         <div className='p-6' >
-            <UIHeaderSub title="Resetear Usuarios" ></UIHeaderSub>
+            <UIHeaderSub title="Resetear Contraseña" ></UIHeaderSub>
             <div className="p-4 mt-[30px] md:p-10 rounded-lg">
-                <form className='w-[35%] flex flex-col items-center justify-center gap-4' onSubmit={validar}>
+                <form className='w-[420px] flex flex-col items-center justify-center gap-4' onSubmit={validar}>
                     <div className='flex w-full' >
                         <div className='w-4/5' >
                             <UIInput
@@ -98,10 +98,11 @@ const ResetUsers = () => {
                     
 
                     </div>
-                    <div className='w-4/5  mx-0'>
-                    <UIButton >Actualizar contrasñea</UIButton>
+                    <div className='w-full' >
+                        <div className='w-4/5  mx-0'>
+                        <UIButton >Actualizar contrasñea</UIButton>
+                        </div>
                     </div>
-
                 </form>
                 <div className='mt-[30px] w-[35%] text-center'>
                     {msg}
