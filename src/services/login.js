@@ -2,7 +2,7 @@ import { urlAPI } from "../utils/config";
 
 export const login = async (body) =>{
     try{
-        const response = await fetch(`${urlAPI}/Login/LoginUSer`,
+        const response = await fetch(`${urlAPI}/Login/LoginUser`,
         {
             method : 'POST',
             headers:{

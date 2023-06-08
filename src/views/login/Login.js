@@ -4,7 +4,7 @@ import UIButton from '../../components/UIButton';
 import AuthContext from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/login';
-
+import jwt from 'jwt-decode'
 const Login = () => {
 
     const {globalIniciarSesion} = useContext(AuthContext);
@@ -33,9 +33,11 @@ const Login = () => {
         }
         try{
             login(json).then( res =>{
+                console.log(res)
                 if(res?.isAuthenticated){
+                    const decoded = jwt(res?.token)
                     let data = {
-                        globalUsuId: 1,
+                        globalUsuId: decoded?.IdUser,
                         globalUsuName: res.nameUser,
                         globalUsuSurname: res.lastName,
                         globalUsuCellphone: "999999999",

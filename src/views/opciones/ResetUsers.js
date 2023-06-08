@@ -100,7 +100,7 @@ const ResetUsers = () => {
                     </div>
                     <div className='w-full' >
                         <div className='w-4/5  mx-0'>
-                        <UIButton >Actualizar contrasñea</UIButton>
+                        <UIButton >Actualizar contraseña</UIButton>
                         </div>
                     </div>
                 </form>
